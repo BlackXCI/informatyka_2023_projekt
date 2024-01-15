@@ -1,13 +1,13 @@
 #include "Menu.h"
 
-void Menu::initWindow()
+/*void Menu::initWindow()
 {
 	this->window = new sf::RenderWindow(sf::VideoMode(800, 600), "Projekt Informatyka", sf::Style::Close | sf::Style::Titlebar);
 	this->window->setFramerateLimit(144);
 	this->window->setVerticalSyncEnabled(false);
-}
+}*/
 
-void Menu::initGIU()
+void Menu::initGIU(sf::RenderWindow& window)
 {
 	if (!this->font.loadFromFile("Fonts/Race Sport.ttf"))
 	{
@@ -18,7 +18,7 @@ void Menu::initGIU()
 	this->text.setCharacterSize(50);
 	this->text.setFillColor(sf::Color::White);
 	this->text.setString("Space Invaders");
-	this->text.setPosition(this->window->getSize().x / 2.f - this->text.getGlobalBounds().width / 2, 0);
+	this->text.setPosition(window.getSize().x / 2.f - this->text.getGlobalBounds().width / 2, 0);
 
 	this->autor.setFont(this->font);
 	this->autor.setCharacterSize(15);
@@ -46,10 +46,10 @@ void Menu::initPrzyciski()
 
 Menu::Menu()
 {
-	this->initWindow();
-	this->initGIU();
+	/*this->initWindow();
+	this->initGIU(*window);
 	this->initWorld();
-	this->initPrzyciski();
+	this->initPrzyciski();*/
 
 
 
@@ -64,34 +64,15 @@ Menu::~Menu()
 	}
 }
 
-void Menu::run()
+/*void Menu::run()
 {
 	while (this->window->isOpen())
 	{
 		this->updatePollEvent();
 		this->update();
-		this->render();
+		this->render(window);
 	}
-}
-
-const bool& Menu::getQuit() const
-{
-	return this->checkQuit;
-}
-
-void Menu::CheckForQuit()
-{
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-	{
-		this->checkQuit = true;
-	}
-}
-
-void Menu::endState()
-{
-
-}
-
+}*/
 
 
 void Menu::updatePollEvent()
@@ -106,11 +87,11 @@ void Menu::updatePollEvent()
 	}
 }
 
-void Menu::updateMousePos()
+void Menu::updateMousePos(sf::RenderWindow& window)
 {
 	this->mousePosScreen = sf::Mouse::getPosition();
-	this->mousePosWindow = sf::Mouse::getPosition(*this->window);
-	this->mousePosView = this->window->mapPixelToCoords(sf::Mouse::getPosition(*this->window));
+	this->mousePosWindow = sf::Mouse::getPosition(window);
+	this->mousePosView = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 }
 
 void Menu::updateGUI()
@@ -127,51 +108,63 @@ void Menu::updatePrzyciski()
 
 	if (this->przyciski["Gra"]->isPressed())
 	{
+		state = 1;
+		std::cout << "Stan 1" << "\n";
+	}
 
+	if (this->przyciski["Tabela Wynikow"]->isPressed())
+	{
+		state = 2;
+		std::cout << "Stan 2" << "\n";
+	}
+
+	if (this->przyciski["O projekcie"]->isPressed())
+	{
+		state = 3;
+		std::cout << "Stan 3" << "\n";
 	}
 
 	if (this->przyciski["Wyjscie"]->isPressed())
 	{
-		std::cout << "Sex" << "\n";
-		this->window->close();
-		std::cout << "Sex2" << "\n";
+		state = 4;
+		std::cout << "Stan 4" << "\n";
 	}
 }
 
-void Menu::update()
+/*void Menu::update()
 {
 	this->updateMousePos();
 	this->updateGUI();
 
 	this->updatePrzyciski();
 
-}
+}*/
 
-void Menu::renderGUI()
+void Menu::renderGUI(sf::RenderWindow& window)
 {
-	this->window->draw(this->text);
-	this->window->draw(this->autor);
+	window.draw(text);
+	window.draw(autor);
 }
 
-void Menu::renderWorld()
+void Menu::renderWorld(sf::RenderWindow& window)
 {
-	this->window->draw(this->tlomenu);
+	window.draw(tlomenu);
 }
 
-void Menu::renderPrzyciski()
+void Menu::renderPrzyciski(sf::RenderWindow& window)
 {
 	for (auto& it : this->przyciski)
 	{
-		it.second->render(this->window);
+		it.second->render(window);
 	}
 }
 
-void Menu::render()
+/*void Menu::render(sf::RenderWindow& window)
 {
 	this->window->clear();
-	this->renderWorld();
+	this->renderWorld(window);
 	this->renderGUI();
 	this->renderPrzyciski();
 	this->window->display();
 
-}
+}*/

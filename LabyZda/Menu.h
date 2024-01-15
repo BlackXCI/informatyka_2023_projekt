@@ -12,6 +12,8 @@ private:
 
     bool checkQuit = false;
 
+    int state = 0;
+
 
     sf::Font font;
     sf::Text text;
@@ -24,31 +26,34 @@ private:
 
     Menu* menu;
 
-    void initWindow();
-    void initGIU();
+    //void initWindow();
+    /*void initGIU(sf::RenderWindow& window);
+    void initWorld();
+    void initPrzyciski();*/
+
+public:
+    void initGIU(sf::RenderWindow& window);
     void initWorld();
     void initPrzyciski();
 
-public:
     Menu();
     virtual ~Menu();
 
-    void run();
+    //void run();
 
-    const bool& getQuit() const;
 
-    virtual void CheckForQuit();
+    //virtual void CheckForQuit();
 
-    virtual void endState();
+    //virtual void endState();
 
     void updatePollEvent();
-    void updateMousePos();
+    void updateMousePos(sf::RenderWindow& window);
     void updateGUI();
     void updatePrzyciski();
-    void update();
-    void renderGUI();
-    void renderWorld();
-    void renderPrzyciski();
-    void render();
+    //void update();
+    void renderGUI(sf::RenderWindow& window);
+    void renderWorld(sf::RenderWindow& window);
+    void renderPrzyciski(sf::RenderWindow& window);
+    //void render(sf::RenderWindow& window);
 
 };

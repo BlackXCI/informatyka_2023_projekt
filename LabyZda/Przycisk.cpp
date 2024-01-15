@@ -69,8 +69,8 @@ void Przycisk::update(const sf::Vector2f mousePos)
 
 
 
-void Przycisk::render(sf::RenderTarget* target)
+void Przycisk::render(sf::RenderWindow& window)
 {
-	target->draw(this->shape);
-	target->draw(this->text);
+	window.draw(this->shape);
+	window.draw(this->text);
 }

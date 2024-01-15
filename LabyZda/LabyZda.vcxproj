@@ -130,20 +130,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Gra.cpp" />
-    <ClCompile Include="Gracz.cpp" />
     <ClCompile Include="Menu.cpp" />
-    <ClCompile Include="Pocisk.cpp" />
-    <ClCompile Include="Przeciwnik.cpp" />
     <ClCompile Include="Przycisk.cpp" />
     <ClCompile Include="Źródło.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Gra.h" />
-    <ClInclude Include="Gracz.h" />
     <ClInclude Include="Menu.h" />
-    <ClInclude Include="Pocisk.h" />
-    <ClInclude Include="Przeciwnik.h" />
     <ClInclude Include="Przycisk.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
