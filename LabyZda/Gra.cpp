@@ -139,6 +139,15 @@ void Gra::endApp()
 
 }
 
+int Gra::getGraczHP()
+{
+	int HP = gracz->getHP();
+	return HP;
+
+}
+
+
+
 
 
 
@@ -338,6 +347,11 @@ void Gra::renderPrzeciwnik(sf::RenderWindow& window)
 	{
 		przeciwnik->render(window);
 	}
+}
+
+int Gra::getPunkty()
+{
+	return punkty;
 }
 
 /*void Gra::render(sf::RenderWindow& window)

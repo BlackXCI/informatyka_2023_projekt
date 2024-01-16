@@ -22,7 +22,7 @@ private:
 	sf::Texture texturetlo;
 	sf::Sprite tlo;
 
-	unsigned punkty;
+	int punkty;
 
 	Gracz* gracz;
 
@@ -53,7 +53,7 @@ public:
 
 	void endApp();
 
-
+	int getGraczHP();
 
 	//void updatePollEvent();
 	void updateInput();
@@ -72,5 +72,6 @@ public:
 	void renderPocisk(sf::RenderWindow& window);
 	void renderPrzeciwnik(sf::RenderWindow& window);
 	//void render(sf::RenderWindow& window);
-};
+	int getPunkty();
+}; 
 

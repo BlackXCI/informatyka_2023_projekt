@@ -40,7 +40,7 @@ void Menu::initPrzyciski()
 {
 	this->przyciski["Gra"] = new Przycisk(50, 150, 150, 50, &this->font, "Nowa Gra", sf::Color(70, 70, 70, 200), sf::Color(70, 70, 150, 200), sf::Color(20, 20, 20, 200));
 	this->przyciski["Tabela Wynikow"] = new Przycisk(50, 225, 150, 50, &this->font, "Tabela Wynikow", sf::Color(70, 70, 70, 200), sf::Color(70, 70, 150, 200), sf::Color(20, 20, 20, 200));
-	this->przyciski["O projekcie"] = new Przycisk(50, 300, 150, 50, &this->font, "O projekcie", sf::Color(70, 70, 70, 200), sf::Color(70, 70, 150, 200), sf::Color(20, 20, 20, 200));
+	this->przyciski["Opcje"] = new Przycisk(50, 300, 150, 50, &this->font, "Opcje", sf::Color(70, 70, 70, 200), sf::Color(70, 70, 150, 200), sf::Color(20, 20, 20, 200));
 	this->przyciski["Wyjscie"] = new Przycisk(50, 375, 150, 50, &this->font, "Wyjscie", sf::Color(70, 70, 70, 200), sf::Color(70, 70, 150, 200), sf::Color(20, 20, 20, 200));
 }
 
@@ -118,7 +118,7 @@ void Menu::updatePrzyciski()
 		std::cout << "Stan 2" << "\n";
 	}
 
-	if (this->przyciski["O projekcie"]->isPressed())
+	if (this->przyciski["Opcje"]->isPressed())
 	{
 		state = 3;
 		std::cout << "Stan 3" << "\n";
