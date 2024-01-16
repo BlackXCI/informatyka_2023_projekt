@@ -19,6 +19,7 @@ int main()
     int wybor = 0;
     std::string imieGracz;
     bool wpisane = false;
+    bool zapis = false;
 
     sf::Font imiefont;
     imiefont.loadFromFile("Fonts/BlackOpsOne-Regular.ttf");
@@ -57,6 +58,8 @@ int main()
         {
             if (event.Event::type == sf::Event::Closed)
                 window.close();
+            else if(event.Event::KeyPressed && event.Event::key.code == sf::Keyboard::Escape)
+                menustate = 0;
 
             else if (event.type == sf::Event::TextEntered && !wpisane)
             {
@@ -155,12 +158,20 @@ int main()
                 gra.renderGUI(window);
                 if (gra.getGraczHP() <= 0)
                 {
-                    std::cout << imieGracz;
-                    std::cout << gra.getPunkty();
 
+                    std::ofstream file("wyniki.txt", std::ios::app);
+                    if (file.is_open() && !zapis)
+                    {
+                        file <<"Gracz: "<< imieGracz << " Wynik: " <<gra.getPunkty() << std::endl;
+                        file.close();
+                        zapis = true;
+                    }
+                    else
+                    {
+                        menustate = 0;
+                        window.clear();
+                    }
 
-
-                    menustate = 5;
                 }
             }
 
