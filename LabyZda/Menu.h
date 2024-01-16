@@ -55,5 +55,6 @@ public:
     void renderWorld(sf::RenderWindow& window);
     void renderPrzyciski(sf::RenderWindow& window);
     //void render(sf::RenderWindow& window);
+    int GetState();
 
 };

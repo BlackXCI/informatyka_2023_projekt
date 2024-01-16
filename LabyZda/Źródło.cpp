@@ -1,4 +1,8 @@
 #include "Menu.h"
+#include "Gra.h"
+#include "Gracz.h"
+#include "Pocisk.h"
+#include "Przeciwnik.h"
 //#include "Gra.h"
 #include<time.h>
 
@@ -10,6 +14,8 @@ int main()
 
     //Gra gra;
     Menu menu;
+    Gra gra;
+    Gracz gracz;
     int menustate = 0;
 
     sf::RenderWindow window(sf::VideoMode(800, 600), "Projekt Informatyka", sf::Style::Close | sf::Style::Titlebar);
@@ -44,28 +50,60 @@ int main()
             {
                 menustate = 4;
             }
-        }
-        if (menustate == 1)
-        {
-
+            if (menu.GetState() == 0)
+            {
+                menustate = 0;
+            }
         }
         if (menustate == 0)
         {
             window.clear();
-            //menu.updatePollEvent();
+            //Init;
             menu.initGIU(window);
             menu.initWorld();
             menu.initPrzyciski();
-            //menu.update();
+            //Update;
             menu.updateMousePos(window);
             menu.updateGUI();
-
             menu.updatePrzyciski();
-            //this->window->clear();
+            //Render;
             menu.renderWorld(window);
             menu.renderGUI(window);
             menu.renderPrzyciski(window);
             
+        }
+        if (menustate == 1)
+        {
+            window.clear();
+            //Init
+            
+            //gra.updatePollEvent();
+            
+            if (gracz.getHP() > 0)
+            {
+                //Update
+                //gra.updatePollEvent();
+                gra.updateInput();
+                gra.updateGracz();
+                gra.updateKolizja(window);
+                gra.updatePocisk();
+                gra.updatePrzeciwnik(window);
+                gra.updateWalka();
+                gra.updateGUI();
+                gra.updateWorld();
+            }
+            //Render
+            gra.renderWorld(window);
+            gra.renderGracz(window);
+            gra.renderPocisk(window);
+            gra.renderPrzeciwnik(window);
+            gra.renderGUI(window);
+            if (gracz.getHP() <= 0)
+            {
+                std::cout << "Stan5";
+            }
+
+
         }
         window.display();
     }

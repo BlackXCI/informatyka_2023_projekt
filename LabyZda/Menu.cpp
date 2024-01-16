@@ -159,6 +159,13 @@ void Menu::renderPrzyciski(sf::RenderWindow& window)
 	}
 }
 
+int Menu::GetState()
+{
+	return state;
+}
+
+
+
 /*void Menu::render(sf::RenderWindow& window)
 {
 	this->window->clear();
@@ -168,3 +175,5 @@ void Menu::renderPrzyciski(sf::RenderWindow& window)
 	this->window->display();
 
 }*/
+
+
