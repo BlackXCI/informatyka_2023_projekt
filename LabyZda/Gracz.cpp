@@ -7,7 +7,7 @@ void Gracz::initVeriables()
 	this->pociskCooldownMax = 17.f;
 	this->pociskCooldown = this->pociskCooldownMax;
 
-	this->hpMax = 10;
+	this->hpMax = 6;
 	this->hp = this->hpMax;
 }
 
@@ -104,7 +104,7 @@ const bool Gracz::canAttack()
 void Gracz::updateAtak()
 {
 	if (this->pociskCooldown < this->pociskCooldownMax)
-		this->pociskCooldown += 1.f;
+		this->pociskCooldown += 0.5f;
 }
 
 //Funkcje
