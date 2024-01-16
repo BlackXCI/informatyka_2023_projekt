@@ -1,7 +1,5 @@
-Gracz: Kacper Wynik: 31
-Gracz: Kacper Wynik: 21
-Gracz: Kacper Wynik: 3
-Gracz: Kacper Wynik: 15
-Gracz: Kacper Wynik: 11
-Gracz: Kacper Wynik: 12
-Gracz: Ksad Wynik: 9
+Kacper 31
+Kacper 29
+Kacper 11
+Kacper 20
+Adam 17

@@ -6,6 +6,18 @@
 //#include "Gra.h"
 #include<time.h>
 #include <fstream>
+#include <algorithm>
+
+struct GraczWynik 
+{
+    std::string imie;
+    int wynik;
+};
+
+bool porownajGraczy(const GraczWynik& a, const GraczWynik& b)
+{
+    return a.wynik > b.wynik;
+}
 
 int main()
 {
@@ -20,6 +32,7 @@ int main()
     std::string imieGracz;
     bool wpisane = false;
     bool zapis = false;
+    bool odczyt = false;
 
     sf::Font imiefont;
     imiefont.loadFromFile("Fonts/BlackOpsOne-Regular.ttf");
@@ -50,6 +63,15 @@ int main()
     inputImie.setPosition(window.getSize().x / 2.f - inputImie.getGlobalBounds().width / 2 - 110.f, 53);
     inputImie.setString("");
 
+    sf::Text WynikiGra;
+    WynikiGra.setFont(imiefont);
+    WynikiGra.setCharacterSize(25);
+    WynikiGra.setFillColor(sf::Color::Green);
+    WynikiGra.setPosition(window.getSize().x / 2.f - inputImie.getGlobalBounds().width / 2 - 120, 0);
+
+    std::vector<GraczWynik> listaGraczy;
+   
+
 
     while (window.isOpen())
     {
@@ -58,8 +80,8 @@ int main()
         {
             if (event.Event::type == sf::Event::Closed)
                 window.close();
-            else if(event.Event::KeyPressed && event.Event::key.code == sf::Keyboard::Escape)
-                menustate = 0;
+            else if (event.Event::KeyPressed && event.Event::key.code == sf::Keyboard::Escape)
+                menustate =- 1;
 
             else if (event.type == sf::Event::TextEntered && !wpisane)
             {
@@ -101,23 +123,6 @@ int main()
             {
                 menustate = 0;
             }
-        }
-        if (menustate == 0)
-        {
-            window.clear();
-            //Init;
-            menu.initGIU(window);
-            menu.initWorld();
-            menu.initPrzyciski();
-            //Update;
-            menu.updateMousePos(window);
-            menu.updateGUI();
-            menu.updatePrzyciski();
-            //Render;
-            menu.renderWorld(window);
-            menu.renderGUI(window);
-            menu.renderPrzyciski(window);
-
         }
         if (menustate == 1)
         {
@@ -162,19 +167,56 @@ int main()
                     std::ofstream file("wyniki.txt", std::ios::app);
                     if (file.is_open() && !zapis)
                     {
-                        file <<"Gracz: "<< imieGracz << " Wynik: " <<gra.getPunkty() << std::endl;
+                        file << imieGracz << " " <<gra.getPunkty() << std::endl;
                         file.close();
                         zapis = true;
                     }
-                    else
-                    {
-                        menustate = 0;
-                        window.clear();
-                    }
+                    
+                    gra.KoniecGry(window);
 
                 }
             }
+        }
+        if (menustate == 2)
+        {
+            std::ifstream inputFile("wyniki.txt");
+            if (inputFile.is_open() && !odczyt) {
+                GraczWynik graczwynik;
+                while (inputFile >> graczwynik.imie >> graczwynik.wynik)
+                {
+                    listaGraczy.push_back(graczwynik);
+                }
+                inputFile.close();
+                odczyt = true;
+            }      
 
+            std::sort(listaGraczy.begin(), listaGraczy.end(), porownajGraczy);
+
+            std::string displayString = "Tabela Wyników:\n";
+            for (const GraczWynik& graczwynik : listaGraczy)
+            {
+                displayString += graczwynik.imie + " - Wynik: " + std::to_string(graczwynik.wynik) + "\n";
+            }
+            WynikiGra.setString(displayString);
+
+            window.clear();
+            window.draw(WynikiGra);
+        }
+        if (menustate == 0)
+        {
+            window.clear();
+            //Init;
+            menu.initGIU(window);
+            menu.initWorld();
+            menu.initPrzyciski();
+            //Update;
+            menu.updateMousePos(window);
+            menu.updateGUI();
+            menu.updatePrzyciski();
+            //Render;
+            menu.renderWorld(window);
+            menu.renderGUI(window);
+            menu.renderPrzyciski(window);
 
         }
         window.display();

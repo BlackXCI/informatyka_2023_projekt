@@ -73,5 +73,6 @@ public:
 	void renderPrzeciwnik(sf::RenderWindow& window);
 	//void render(sf::RenderWindow& window);
 	int getPunkty();
+	void KoniecGry(sf::RenderWindow& window);
 }; 
 

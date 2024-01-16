@@ -33,11 +33,11 @@ void Gra::initGIU(sf::RenderWindow& window)
 	this->text.setFillColor(sf::Color::Green);
 	this->text.setString("test");
 
-	/*this->Koniec.setFont(this->font);
+	this->Koniec.setFont(this->font);
 	this->Koniec.setCharacterSize(60);
 	this->Koniec.setFillColor(sf::Color::Green);
 	this->Koniec.setString("Koniec Gry");
-	this->Koniec.setPosition(window.getSize().x / 2.f - this->Koniec.getGlobalBounds().width / 2, window.getSize().y / 2.f - this->Koniec.getGlobalBounds().height / 2);*/
+	this->Koniec.setPosition(230.f,250.f);
 
 	this->graczHP.setSize(sf::Vector2f(200.f, 15.f));
 	this->graczHP.setFillColor(sf::Color::Green);
@@ -352,6 +352,14 @@ void Gra::renderPrzeciwnik(sf::RenderWindow& window)
 int Gra::getPunkty()
 {
 	return punkty;
+}
+
+void Gra::KoniecGry(sf::RenderWindow& window)
+{
+	if (this->gracz->getHP() <= 0)
+	{
+		window.draw(Koniec);
+	}
 }
 
 /*void Gra::render(sf::RenderWindow& window)
