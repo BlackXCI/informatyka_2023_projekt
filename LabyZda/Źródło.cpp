@@ -19,6 +19,9 @@ bool porownajGraczy(const GraczWynik& a, const GraczWynik& b)
     return a.wynik > b.wynik;
 }
 
+sf::Clock pauseClock;
+sf::Time pauseDelay = sf::seconds(1.0);
+
 int main()
 {
     srand(static_cast<unsigned int>(time(0)));
@@ -33,6 +36,11 @@ int main()
     bool wpisane = false;
     bool zapis = false;
     bool odczyt = false;
+    bool pauza = false;
+    bool pomoc = false;
+
+    sf::Clock clock;
+    sf::Time elapsed;
 
     sf::Font imiefont;
     imiefont.loadFromFile("Fonts/BlackOpsOne-Regular.ttf");
@@ -70,7 +78,13 @@ int main()
     WynikiGra.setPosition(window.getSize().x / 2.f - inputImie.getGlobalBounds().width / 2 - 120, 0);
 
     std::vector<GraczWynik> listaGraczy;
-   
+
+    sf::Text Pauza;
+    Pauza.setFont(imiefont);
+    Pauza.setCharacterSize(60);
+    Pauza.setFillColor(sf::Color::Green);
+    Pauza.setString("Pauza");
+    Pauza.setPosition(300.f, 250.f);
 
 
     while (window.isOpen())
@@ -80,24 +94,35 @@ int main()
         {
             if (event.Event::type == sf::Event::Closed)
                 window.close();
-            else if (event.Event::KeyPressed && event.Event::key.code == sf::Keyboard::Escape)
-                menustate =- 1;
-
-            else if (event.type == sf::Event::TextEntered && !wpisane)
+            else if (event.Event::KeyPressed)
             {
-                if (event.text.unicode == 8 && !imieGracz.empty()) {
-                    imieGracz.pop_back();
-                }
-                else if (event.text.unicode == 13)
+                if (event.key.code == sf::Keyboard::F2 && pauseClock.getElapsedTime() > pauseDelay)
                 {
-                    wybor = 1;
-                    wpisane = true;
+                    pauza = !pauza;
+                    pauseClock.restart();
                 }
-                else if (event.text.unicode >= 32 && event.text.unicode < 128)
+                if (event.key.code == sf::Keyboard::F1)
                 {
-                    imieGracz += static_cast<char>(event.text.unicode);
+                    menustate == 0;
+                }
+                if (event.type == sf::Event::TextEntered && !wpisane)
+                {
+                    if (event.text.unicode == 8 && !imieGracz.empty()) {
+                        imieGracz.pop_back();
+                    }
+                    else if (event.text.unicode == 13)
+                    {
+                        wybor = 1;
+                        wpisane = true;
+                    }
+                    else if (event.text.unicode >= 32 && event.text.unicode < 128)
+                    {
+                        imieGracz += static_cast<char>(event.text.unicode);
+                    }
                 }
             }
+            
+            
         }
 
 
@@ -137,43 +162,53 @@ int main()
             }
             else if (wybor == 1)
             {
-                window.clear();
-                //Init
-
-                //gra.updatePollEvent();
-
-                if (gra.getGraczHP() > 0)
+                if (!pauza)
                 {
-                    //Update
-                    //gra.updatePollEvent();
-                    gra.updateInput();
-                    gra.updateGracz();
-                    gra.updateKolizja(window);
-                    gra.updatePocisk();
-                    gra.updatePrzeciwnik(window);
-                    gra.updateWalka();
-                    gra.updateGUI();
-                    gra.updateWorld();
+                        window.clear();
+                        //Init
+
+                        //gra.updatePollEvent();
+
+
+                        if (gra.getGraczHP() > 0)
+                        {
+                            //Update
+                            //gra.updatePollEvent();
+                            gra.updateInput();
+                            gra.updateGracz();
+                            gra.updateKolizja(window);
+                            gra.updatePocisk();
+                            gra.updatePrzeciwnik(window);
+                            gra.updateWalka();
+                            gra.updateGUI();
+                            gra.updateWorld();
+                        }
+                        //Render
+                        gra.renderWorld(window);
+                        gra.renderGracz(window);
+                        gra.renderPocisk(window);
+                        gra.renderPrzeciwnik(window);
+                        gra.renderGUI(window);
+                        if (gra.getGraczHP() <= 0)
+                        {
+
+                            std::ofstream file("wyniki.txt", std::ios::app);
+                            if (file.is_open() && !zapis)
+                            {
+                                file << imieGracz << " " << gra.getPunkty() << std::endl;
+                                file.close();
+                                zapis = true;
+                            }
+
+                            gra.KoniecGry(window);
+
+                        }
+
+
                 }
-                //Render
-                gra.renderWorld(window);
-                gra.renderGracz(window);
-                gra.renderPocisk(window);
-                gra.renderPrzeciwnik(window);
-                gra.renderGUI(window);
-                if (gra.getGraczHP() <= 0)
+                else if (pauza)
                 {
-
-                    std::ofstream file("wyniki.txt", std::ios::app);
-                    if (file.is_open() && !zapis)
-                    {
-                        file << imieGracz << " " <<gra.getPunkty() << std::endl;
-                        file.close();
-                        zapis = true;
-                    }
-                    
-                    gra.KoniecGry(window);
-
+                    window.draw(Pauza);
                 }
             }
         }
@@ -219,6 +254,12 @@ int main()
             menu.renderPrzyciski(window);
 
         }
+        if (menustate == 4)
+        {
+            window.close();
+        }
+
+        elapsed = clock.restart();
         window.display();
     }
 
