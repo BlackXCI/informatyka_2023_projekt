@@ -20,7 +20,9 @@ private:
 	sf::Text Koniec;
 
 	sf::Texture texturetlo;
+	sf::Texture texturetlo1;
 	sf::Sprite tlo;
+	sf::Sprite tlo1;
 
 	int punkty;
 
@@ -33,6 +35,7 @@ private:
 	float spawnTimerMax;
 	std::vector<Przeciwnik*> przeciwnicy;
 
+	int poziom;
 
 
 	//void initWindow();
@@ -40,6 +43,7 @@ public:
 	void initTextures();
 	void initGIU(sf::RenderWindow& window);
 	void initWorld();
+	void initWorld1();
 	void initSys();
 	void initGracz();
 	void initPrzeciwnik();
@@ -54,6 +58,9 @@ public:
 	void endApp();
 
 	int getGraczHP();
+
+	void ustawPoziom(int nowyPoziom);
+	int pobierzPoziom() const;
 
 	//void updatePollEvent();
 	void updateInput();

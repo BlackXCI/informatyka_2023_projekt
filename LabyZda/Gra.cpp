@@ -49,10 +49,20 @@ void Gra::initGIU(sf::RenderWindow& window)
 
 void Gra::initWorld()
 {
+
 	this->texturetlo.loadFromFile("Textures/tlo.jpg");
 
 
 	this->tlo.setTexture(this->texturetlo);
+}
+
+void Gra::initWorld1()
+{
+
+	this->texturetlo1.loadFromFile("Textures/tlo1.jpg");
+
+
+	this->tlo1.setTexture(this->texturetlo1);
 }
 
 void Gra::initSys()
@@ -70,7 +80,7 @@ void Gra::initGracz()
 
 void Gra::initPrzeciwnik()
 {
-	this->spawnTimerMax = 50.f;
+	this->spawnTimerMax = 200.f;
 	this->spawnTimer = this->spawnTimerMax;
 }
 
@@ -85,6 +95,7 @@ Gra::Gra()
 	this->initTextures();
 	this->initGIU(*window);
 	this->initWorld();
+	this->initWorld1();
 	this->initGracz();
 	this->initPrzeciwnik();
 }
@@ -146,6 +157,15 @@ int Gra::getGraczHP()
 
 }
 
+void Gra::ustawPoziom(int nowyPoziom) 
+{
+	poziom = nowyPoziom;
+}
+
+int Gra::pobierzPoziom() const 
+{
+	return poziom;
+}
 
 
 
@@ -245,7 +265,15 @@ void Gra::updatePocisk()
 
 void Gra::updatePrzeciwnik(sf::RenderWindow& window)
 {
-	this->spawnTimer += 0.5f;
+	if (poziom == 0)
+	{
+		this->spawnTimer += 1.5f;
+	}
+	else if (poziom == 1)
+	{
+		this->spawnTimer += 3.5f;
+	}
+
 	if (this->spawnTimer >= this->spawnTimerMax)
 	{
 		this->przeciwnicy.push_back(new Przeciwnik(rand() % window.getSize().x - 20.f, -150.f));
@@ -325,7 +353,14 @@ void Gra::renderGUI(sf::RenderWindow& window)
 
 void Gra::renderWorld(sf::RenderWindow& window)
 {
-	window.draw(this->tlo);
+	if (poziom == 0)
+	{
+		window.draw(this->tlo);
+	}
+	else if (poziom == 1)
+	{
+		window.draw(this->tlo1);
+	}
 }
 
 void Gra::renderGracz(sf::RenderWindow& window)

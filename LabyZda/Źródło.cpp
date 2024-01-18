@@ -38,6 +38,9 @@ int main()
     bool odczyt = false;
     bool pauza = false;
     bool pomoc = false;
+    bool wybrano = false;
+    int poczatek = 0;
+    int poziom = 0;
 
     sf::Clock clock;
     sf::Time elapsed;
@@ -45,7 +48,7 @@ int main()
     sf::Font imiefont;
     imiefont.loadFromFile("Fonts/BlackOpsOne-Regular.ttf");
 
-   
+
 
 
     sf::RenderWindow window(sf::VideoMode(800, 600), "Projekt Informatyka", sf::Style::Close | sf::Style::Titlebar);
@@ -86,6 +89,20 @@ int main()
     Pauza.setString("Pauza");
     Pauza.setPosition(300.f, 250.f);
 
+    sf::Text Pomoc;
+    Pomoc.setFont(imiefont);
+    Pomoc.setCharacterSize(20);
+    Pomoc.setFillColor(sf::Color::Green);
+    Pomoc.setString("Pomoc \nTwoim zadaniem jest zniszczyc jak nawiecej przeciwnikow \nSterowanie: \nAD - poruszanie sie \nLewy Przycisk Myszy - Strzal \nF2 - Pauza \nV - Latwy Poziom Trudnosci \nX- Trudny Poziom Trudnosci");
+    Pomoc.setPosition(20.f, 20.f);
+
+    sf::Text PoziomyTrud;
+    PoziomyTrud.setFont(imiefont);
+    PoziomyTrud.setCharacterSize(20);
+    PoziomyTrud.setFillColor(sf::Color::Green);
+    PoziomyTrud.setString("Projekt na Informatyke II ARiSS 23/24 \n Opracowal: Kacper Korzeb \n");
+    PoziomyTrud.setPosition(20.f, 20.f);
+
 
     while (window.isOpen())
     {
@@ -101,9 +118,31 @@ int main()
                     pauza = !pauza;
                     pauseClock.restart();
                 }
-                if (event.key.code == sf::Keyboard::F1)
+                if (event.key.code == sf::Keyboard::F1 && pauseClock.getElapsedTime() > pauseDelay)
                 {
-                    menustate == 0;
+                    pomoc = !pomoc;
+                    pauseClock.restart();
+
+                }
+                if (event.key.code == sf::Keyboard::Escape && pauseClock.getElapsedTime() > pauseDelay)
+                {
+                    menustate = 1;
+                    std::cout << menustate;
+                    pauseClock.restart();
+                    elapsed = clock.restart();
+
+                }
+                if (event.key.code == sf::Keyboard::X && pauseClock.getElapsedTime() > pauseDelay)
+                {
+                    poziom = 0;
+                    menustate = 1;
+
+                }
+                if (event.key.code == sf::Keyboard::V && pauseClock.getElapsedTime() > pauseDelay)
+                {
+                    poziom = 1;
+                    menustate = 1;
+
                 }
                 if (event.type == sf::Event::TextEntered && !wpisane)
                 {
@@ -121,12 +160,10 @@ int main()
                     }
                 }
             }
-            
-            
+
+
         }
-
-
-        if (menustate == 0)
+        if (poczatek == 0)
         {
             if (menu.GetState() == 1)
             {
@@ -162,8 +199,10 @@ int main()
             }
             else if (wybor == 1)
             {
-                if (!pauza)
+                if (!pomoc)
                 {
+                    if (!pauza)
+                    {
                         window.clear();
                         //Init
 
@@ -174,6 +213,7 @@ int main()
                         {
                             //Update
                             //gra.updatePollEvent();
+                            gra.ustawPoziom(poziom);
                             gra.updateInput();
                             gra.updateGracz();
                             gra.updateKolizja(window);
@@ -205,17 +245,24 @@ int main()
                         }
 
 
+                    }
+                    else if (pauza)
+                    {
+                        window.draw(Pauza);
+                    }
                 }
-                else if (pauza)
+                else if (pomoc)
                 {
-                    window.draw(Pauza);
+                    window.clear();
+                    window.draw(Pomoc);
                 }
             }
         }
         if (menustate == 2)
         {
             std::ifstream inputFile("wyniki.txt");
-            if (inputFile.is_open() && !odczyt) {
+            if (inputFile.is_open() && !odczyt)
+            {
                 GraczWynik graczwynik;
                 while (inputFile >> graczwynik.imie >> graczwynik.wynik)
                 {
@@ -223,7 +270,7 @@ int main()
                 }
                 inputFile.close();
                 odczyt = true;
-            }      
+            }
 
             std::sort(listaGraczy.begin(), listaGraczy.end(), porownajGraczy);
 
@@ -237,6 +284,13 @@ int main()
             window.clear();
             window.draw(WynikiGra);
         }
+        if (menustate == 3)
+        {
+            window.clear();
+            window.draw(PoziomyTrud);
+
+        }
+
         if (menustate == 0)
         {
             window.clear();
@@ -251,9 +305,9 @@ int main()
             //Render;
             menu.renderWorld(window);
             menu.renderGUI(window);
-            menu.renderPrzyciski(window);
-
+            menu.renderPrzyciski(window);          
         }
+
         if (menustate == 4)
         {
             window.close();
