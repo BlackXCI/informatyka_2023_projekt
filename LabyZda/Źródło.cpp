@@ -126,22 +126,28 @@ int main()
                 }
                 if (event.key.code == sf::Keyboard::Escape && pauseClock.getElapsedTime() > pauseDelay)
                 {
-                    menustate = 1;
-                    std::cout << menustate;
+                    window.close();
+
                     pauseClock.restart();
                     elapsed = clock.restart();
+
+                    std::ofstream file("wyniki.txt", std::ios::app);
+                    if (file.is_open() && !zapis)
+                    {
+                        file << imieGracz << " " << gra.getPunkty() << std::endl;
+                        file.close();
+                    }
+
 
                 }
                 if (event.key.code == sf::Keyboard::X && pauseClock.getElapsedTime() > pauseDelay)
                 {
                     poziom = 0;
-                    menustate = 1;
 
                 }
                 if (event.key.code == sf::Keyboard::V && pauseClock.getElapsedTime() > pauseDelay)
                 {
                     poziom = 1;
-                    menustate = 1;
 
                 }
                 if (event.type == sf::Event::TextEntered && !wpisane)
@@ -185,133 +191,126 @@ int main()
             {
                 menustate = 0;
             }
-        }
-        if (menustate == 1)
-        {
-            if (wybor == 0)
+            if (menustate == 1)
             {
-                inputImie.setString(imieGracz);
-
-                window.clear(sf::Color(30, 30, 30));
-                window.draw(textImie);
-                window.draw(inputBox);
-                window.draw(inputImie);
-            }
-            else if (wybor == 1)
-            {
-                if (!pomoc)
+                if (wybor == 0)
                 {
-                    if (!pauza)
+                    inputImie.setString(imieGracz);
+
+                    window.clear(sf::Color(30, 30, 30));
+                    window.draw(textImie);
+                    window.draw(inputBox);
+                    window.draw(inputImie);
+                }
+                else if (wybor == 1)
+                {
+                    if (!pomoc)
                     {
-                        window.clear();
-                        //Init
-
-                        //gra.updatePollEvent();
-
-
-                        if (gra.getGraczHP() > 0)
+                        if (!pauza)
                         {
-                            //Update
+                            window.clear();
+                            //Init
+
                             //gra.updatePollEvent();
-                            gra.ustawPoziom(poziom);
-                            gra.updateInput();
-                            gra.updateGracz();
-                            gra.updateKolizja(window);
-                            gra.updatePocisk();
-                            gra.updatePrzeciwnik(window);
-                            gra.updateWalka();
-                            gra.updateGUI();
-                            gra.updateWorld();
-                        }
-                        //Render
-                        gra.renderWorld(window);
-                        gra.renderGracz(window);
-                        gra.renderPocisk(window);
-                        gra.renderPrzeciwnik(window);
-                        gra.renderGUI(window);
-                        if (gra.getGraczHP() <= 0)
-                        {
 
-                            std::ofstream file("wyniki.txt", std::ios::app);
-                            if (file.is_open() && !zapis)
+
+                            if (gra.getGraczHP() > 0)
                             {
-                                file << imieGracz << " " << gra.getPunkty() << std::endl;
-                                file.close();
-                                zapis = true;
+                                //Update
+                                //gra.updatePollEvent();
+                                gra.ustawPoziom(poziom);
+                                gra.updateInput();
+                                gra.updateGracz();
+                                gra.updateKolizja(window);
+                                gra.updatePocisk();
+                                gra.updatePrzeciwnik(window);
+                                gra.updateWalka();
+                                gra.updateGUI();
+                                gra.updateWorld();
+                            }
+                            //Render
+                            gra.renderWorld(window);
+                            gra.renderGracz(window);
+                            gra.renderPocisk(window);
+                            gra.renderPrzeciwnik(window);
+                            gra.renderGUI(window);
+                            if (gra.getGraczHP() <= 0)
+                            {
+
+                                gra.KoniecGry(window);
+
                             }
 
-                            gra.KoniecGry(window);
 
                         }
-
-
+                        else if (pauza)
+                        {
+                            window.draw(Pauza);
+                        }
                     }
-                    else if (pauza)
+                    else if (pomoc)
                     {
-                        window.draw(Pauza);
+                        window.clear();
+                        window.draw(Pomoc);
                     }
                 }
-                else if (pomoc)
-                {
-                    window.clear();
-                    window.draw(Pomoc);
-                }
             }
-        }
-        if (menustate == 2)
-        {
-            std::ifstream inputFile("wyniki.txt");
-            if (inputFile.is_open() && !odczyt)
+            if (menustate == 2)
             {
-                GraczWynik graczwynik;
-                while (inputFile >> graczwynik.imie >> graczwynik.wynik)
+                std::ifstream inputFile("wyniki.txt");
+                if (inputFile.is_open() && !odczyt)
                 {
-                    listaGraczy.push_back(graczwynik);
+                    GraczWynik graczwynik;
+                    while (inputFile >> graczwynik.imie >> graczwynik.wynik)
+                    {
+                        listaGraczy.push_back(graczwynik);
+                    }
+                    inputFile.close();
+                    odczyt = true;
                 }
-                inputFile.close();
-                odczyt = true;
+
+                std::sort(listaGraczy.begin(), listaGraczy.end(), porownajGraczy);
+
+                std::string displayString = "Tabela Wyników:\n";
+                for (const GraczWynik& graczwynik : listaGraczy)
+                {
+                    displayString += graczwynik.imie + " - Wynik: " + std::to_string(graczwynik.wynik) + "\n";
+                }
+                WynikiGra.setString(displayString);
+
+                window.clear();
+                window.draw(WynikiGra);
             }
-
-            std::sort(listaGraczy.begin(), listaGraczy.end(), porownajGraczy);
-
-            std::string displayString = "Tabela Wyników:\n";
-            for (const GraczWynik& graczwynik : listaGraczy)
+            if (menustate == 3)
             {
-                displayString += graczwynik.imie + " - Wynik: " + std::to_string(graczwynik.wynik) + "\n";
+                window.clear();
+                window.draw(PoziomyTrud);
+
             }
-            WynikiGra.setString(displayString);
 
-            window.clear();
-            window.draw(WynikiGra);
-        }
-        if (menustate == 3)
-        {
-            window.clear();
-            window.draw(PoziomyTrud);
+            if (menustate == 0)
+            {
+                window.clear();
+                //Init;
+                menu.initGIU(window);
+                menu.initWorld();
+                menu.initPrzyciski();
+                //Update;
+                menu.updateMousePos(window);
+                menu.updateGUI();
+                menu.updatePrzyciski();
+                //Render;
+                menu.renderWorld(window);
+                menu.renderGUI(window);
+                menu.renderPrzyciski(window);
+            }
 
+            if (menustate == 4)
+            {
+                window.close();
+            }
         }
-
-        if (menustate == 0)
-        {
-            window.clear();
-            //Init;
-            menu.initGIU(window);
-            menu.initWorld();
-            menu.initPrzyciski();
-            //Update;
-            menu.updateMousePos(window);
-            menu.updateGUI();
-            menu.updatePrzyciski();
-            //Render;
-            menu.renderWorld(window);
-            menu.renderGUI(window);
-            menu.renderPrzyciski(window);          
-        }
-
-        if (menustate == 4)
-        {
-            window.close();
-        }
+       
 
         elapsed = clock.restart();
         window.display();

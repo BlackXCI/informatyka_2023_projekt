@@ -80,7 +80,7 @@ void Gra::initGracz()
 
 void Gra::initPrzeciwnik()
 {
-	this->spawnTimerMax = 200.f;
+	this->spawnTimerMax = 150.f;
 	this->spawnTimer = this->spawnTimerMax;
 }
 
